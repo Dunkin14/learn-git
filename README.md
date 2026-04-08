@@ -1,6 +1,6 @@
 # learn-git
 Git for fun
 
-##Update My Life
+## Update My Life
 
 Nuttamon Meesawat

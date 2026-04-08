@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reward สะสมตัวการ์ตูน</title>
+  <style>
+    :root {
+      --bg: #f8f0ff;
+      --card: #ffffff;
+      --text: #3f2d5c;
+      --accent: #ff7eb9;
+      --accent-dark: #d8457e;
+      --shadow: 0 18px 40px rgba(84, 36, 117, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Sarabun", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #fff1ff 0%, #f8f0ff 45%, #e8d6ff 100%);
+      color: var(--text);
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      gap: 24px;
+      justify-items: center;
+    }
+
+    header {
+      text-align: center;
+      max-width: 760px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: -0.04em;
+    }
+
+    header p {
+      margin: 16px auto 0;
+      max-width: 620px;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .score-card {
+      min-width: 210px;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), #ffe7fa);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 14px 30px rgba(102, 19, 96, 0.12);
+    }
+
+    .score-card strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: #7d4c86;
+    }
+
+    .score-card span {
+      font-size: 2.4rem;
+      letter-spacing: -0.03em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1160px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 28px;
+      border: 1px solid rgba(128, 40, 120, 0.1);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 42px rgba(84, 36, 117, 0.18);
+    }
+
+    .card-image {
+      height: 230px;
+      background: linear-gradient(135deg, #ffdbf2 0%, #d7c2ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card-image img {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-body h2 {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+    }
+
+    .card-body p {
+      margin: 0 0 16px;
+      color: #6e5474;
+      line-height: 1.6;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .reward-count {
+      font-weight: 700;
+      color: #4a2a63;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      box-shadow: 0 12px 22px rgba(204, 84, 163, 0.24);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .theme-note {
+      max-width: 760px;
+      text-align: center;
+      color: #634b72;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      color: #8a6f96;
+      font-size: 0.92rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>เว็บสะสม Reward ตัวการ์ตูน</h1>
+      <p>สะสมการ์ดตัวการ์ตูนเพื่อนำไปแลกรางวัล สนุกกับการเก็บแต้ม พร้อมดูสถานะคอลเลกชันในระบบ</p>
+      <div class="score-board">
+        <div class="score-card">
+          <strong>คะแนนสะสม</strong>
+          <span id="points">0</span>
+        </div>
+        <div class="score-card">
+          <strong>ตัวการ์ตูนทั้งหมด</strong>
+          <span id="total-collected">0 / 6</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="cards" id="card-list"></section>
+
+    <div class="theme-note">
+      กด "รับ Reward" เพื่อสะสมการ์ตูนแต่ละตัว และตรวจสอบคะแนนเพื่อนำไปแลกโค้ดพิเศษในอนาคต
+    </div>
+    <div class="footer">สร้างโดยระบบ Reward เว็บง่าย ๆ สำหรับเรียนรู้</div>
+  </main>
+
+  <script>
+    const rewards = [
+      {
+        id: 1,
+        name: "มอนสเตอร์หัวใจ",
+        description: "การ์ตูนสายหวาน ช่วยเพิ่มพลังใจทุกวัน",
+        image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=360&q=80",
+        points: 10,
+      },
+      {
+        id: 2,
+        name: "สิงโตซ่า",
+        description: "การ์ตูนสายกล้าแกร่ง ให้แรงบันดาลใจในการทำภารกิจ",
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=360&q=80",
+        points: 15,
+      },
+      {
+        id: 3,
+        name: "นกน้อยน่ารัก",
+        description: "ตัวการ์ตูนบอบบาง แต่น่ารักมาก เหมาะสำหรับสะสมเป็นเพื่อน",
+        image: "https://images.unsplash.com/photo-1511203466129-824e631920d6?auto=format&fit=crop&w=360&q=80",
+        points: 8,
+      },
+      {
+        id: 4,
+        name: "เจ้าแมวยิ้ม",
+        description: "ผ่อนคลายกับแมวขี้เล่น รับรอยยิ้มทุกครั้งที่คลิก",
+        image: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=360&q=80",
+        points: 12,
+      },
+      {
+        id: 5,
+        name: "กระต่ายพลังดาว",
+        description: "กระต่ายแห่งดวงดาว ช่วยให้เข้าถึงรางวัลพิเศษได้เร็วขึ้น",
+        image: "https://images.unsplash.com/photo-1518081461909-3a1f3bbba9d0?auto=format&fit=crop&w=360&q=80",
+        points: 18,
+      },
+      {
+        id: 6,
+        name: "เจ้าหมีภูเขา",
+        description: "เพื่อนผู้คอยปกป้องและมอบรางวัลใหญ่เมื่อสะสมครบ",
+        image: "https://images.unsplash.com/photo-1515331420-2785b2a03b68?auto=format&fit=crop&w=360&q=80",
+        points: 20,
+      },
+    ];
+
+    const cardList = document.getElementById("card-list");
+    const pointsElement = document.getElementById("points");
+    const totalCollectedElement = document.getElementById("total-collected");
+
+    let points = 0;
+    const collectedIds = new Set();
+
+    function updateSummary() {
+      pointsElement.textContent = points;
+      totalCollectedElement.textContent = `${collectedIds.size} / ${rewards.length}`;
+    }
+
+    function createCard(reward) {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      const image = document.createElement("div");
+      image.className = "card-image";
+      image.innerHTML = `<img src="${reward.image}" alt="${reward.name}" loading="lazy" />`;
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+      body.innerHTML = `
+        <h2>${reward.name}</h2>
+        <p>${reward.description}</p>
+      `;
+
+      const actions = document.createElement("div");
+      actions.className = "card-actions";
+
+      const rewardCount = document.createElement("div");
+      rewardCount.className = "reward-count";
+      rewardCount.textContent = `+${reward.points} คะแนน`;
+
+      const button = document.createElement("button");
+      button.textContent = "รับ Reward";
+      button.addEventListener("click", () => {
+        if (!collectedIds.has(reward.id)) {
+          collectedIds.add(reward.id);
+          points += reward.points;
+          button.textContent = "สะสมแล้ว";
+          button.disabled = true;
+          button.style.opacity = "0.85";
+          updateSummary();
+        }
+      });
+
+      actions.append(rewardCount, button);
+      body.appendChild(actions);
+      card.append(image, body);
+      return card;
+    }
+
+    function init() {
+      rewards.forEach((reward) => {
+        cardList.appendChild(createCard(reward));
+      });
+      updateSummary();
+    }
+
+    init();
+  </script>
+</body>
+</html>
